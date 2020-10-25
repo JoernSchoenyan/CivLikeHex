@@ -8,12 +8,14 @@ public class HexGrid : MonoBehaviour
 	public HexCell cellPrefab;
 
 	public Color defaultColor = Color.white;
+	public Texture2D noiseSource = null;
 
-	HexCell[] cells;
-	HexMesh hexMesh;
+	private HexCell[] cells;
+	private HexMesh hexMesh;
 
 	private void Awake()
 	{
+		HexMetrics.noiseSource = noiseSource;
 		hexMesh = GetComponentInChildren<HexMesh>();
 
 		cells = new HexCell[height * width];
@@ -27,7 +29,12 @@ public class HexGrid : MonoBehaviour
 		}
 	}
 
-    private void Start()
+	private void OnEnable()
+	{
+		HexMetrics.noiseSource = noiseSource;
+	}
+
+	private void Start()
     {
 		hexMesh.Triangulate(cells);
     }

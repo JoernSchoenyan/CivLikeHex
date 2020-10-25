@@ -9,6 +9,14 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     HexCell[] neighbors;
 
+    public Vector3 Position
+    {
+        get
+        {
+            return transform.localPosition;
+        }
+    }
+
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
