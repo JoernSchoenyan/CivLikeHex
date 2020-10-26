@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class HexMesh : MonoBehaviour
 {
 	private Mesh hexMesh;
-	private List<Vector3> vertices;
-	private List<int> triangles;
-	private List<Color> colors;
+	private static List<Vector3> vertices = new List<Vector3>();
+	private static List<int> triangles = new List<int>();
+	private static List<Color> colors = new List<Color>();
 
 	private MeshCollider meshCollider;
 
@@ -53,7 +53,7 @@ public class HexMesh : MonoBehaviour
 		Vector3 center = cell.Position;
 		EdgeVertices e = new EdgeVertices(center + HexMetrics.GetFirstSolidCorner(direction), center + HexMetrics.GetSecondSolidCorner(direction));
 
-		TriangulateEdgeFan(center, e, cell.color);
+		TriangulateEdgeFan(center, e, cell.Color);
 
 		if (direction <= HexDirection.SE)
         {
@@ -72,7 +72,7 @@ public class HexMesh : MonoBehaviour
 		Vector3 bridge = HexMetrics.GetBridge(direction);
 		EdgeVertices e2 = new EdgeVertices(e1.v1 + bridge, e1.v4 + bridge);
 
-		TriangulateEdgeStrip(e1, cell.color, e2, neighbor.color);
+		TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color);
 
 		HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
 		if (direction <= HexDirection.E && nextNeighbor != null)
@@ -105,7 +105,7 @@ public class HexMesh : MonoBehaviour
 	private void TriangulateCorner(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
     {
 		AddTriangle(bottom, left, right);
-		AddTriangleColor(bottomCell.color, leftCell.color, rightCell.color);
+		AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
 	}
 
 	private void AddTriangle(Vector3 v1, Vector3 v2, Vector3 v3)

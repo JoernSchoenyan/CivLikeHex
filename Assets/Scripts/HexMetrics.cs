@@ -7,6 +7,7 @@ public static class HexMetrics
 	public const float solidFactor = 0.75f;
 	public const float blendFactor = 1f - solidFactor;
 	public const float cellPerturbStrength = 3f;
+	public const int chunkSizeX = 5, chunkSizeZ = 5;
 
 	public static Texture2D noiseSource = null;
 
