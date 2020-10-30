@@ -60,4 +60,9 @@ public class HexCell : MonoBehaviour
             }
         }
     }
+
+    private void RefreshSelfOnly()
+    {
+        chunk.Refresh();
+    }
 }

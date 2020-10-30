@@ -53,4 +53,13 @@ public static class HexMetrics
     {
 		return noiseSource.GetPixelBilinear(position.x * noiseScale, position.y * noiseScale);
     }
+
+	public static Vector3 Perturb(Vector3 position)
+	{
+		Vector4 sample = SampleNoise(position);
+		position.x += (sample.x * 2f - 1f) * cellPerturbStrength;
+		position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
+
+		return position;
+	}
 }
