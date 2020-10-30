@@ -22,6 +22,14 @@ public class HexCell : MonoBehaviour
         }
     }
 
+    public bool HasRoads
+    {
+        get
+        {
+            return false;
+        }
+    }
+
     [SerializeField]
     private HexCell[] neighbors;
     private Color color;
@@ -43,6 +51,11 @@ public class HexCell : MonoBehaviour
     {
         neighbors[(int)direction] = cell;
         cell.neighbors[(int)direction.Opposite()] = this;
+    }
+
+    public bool HasRoadThroughEdge(HexDirection direction)
+    {
+        return false;
     }
 
     private void Refresh()

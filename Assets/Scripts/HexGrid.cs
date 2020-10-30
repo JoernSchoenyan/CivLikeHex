@@ -3,8 +3,9 @@
 public class HexGrid : MonoBehaviour
 {
 	public int chunkCountX = 4, chunkCountZ = 3;
+    public int seed = 314159265;
 
-	public HexCell cellPrefab;
+    public HexCell cellPrefab;
 
 	public Color defaultColor = Color.white;
 	public Texture2D noiseSource = null;
@@ -19,12 +20,19 @@ public class HexGrid : MonoBehaviour
 	private void Awake()
     {
         HexMetrics.noiseSource = noiseSource;
+        HexMetrics.InitializeHashGrid(seed);
 
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
         cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
 
         CreateChunks();
         CreateCells();
+    }
+
+    private void OnEnable()
+    {
+        HexMetrics.noiseSource = noiseSource;
+        HexMetrics.InitializeHashGrid(seed);
     }
 
     private void CreateChunks()
@@ -53,11 +61,6 @@ public class HexGrid : MonoBehaviour
             }
         }
     }
-
-    private void OnEnable()
-	{
-		HexMetrics.noiseSource = noiseSource;
-	}
 
 	public HexCell GetCell(Vector3 position)
     {

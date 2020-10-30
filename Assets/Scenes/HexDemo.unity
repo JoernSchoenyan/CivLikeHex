@@ -1898,6 +1898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunkCountX: 4
   chunkCountZ: 3
+  seed: 314159265
   cellPrefab: {fileID: 3815425504572456418, guid: d59001577cdb2744a975020b40f2c173, type: 3}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   noiseSource: {fileID: 2800000, guid: 3f267cf6d9b7094449168b484e7d1345, type: 3}
