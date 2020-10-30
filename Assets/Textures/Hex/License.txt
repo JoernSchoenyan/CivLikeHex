@@ -1,0 +1,6 @@
+*** Hex map helper textures ***
+by Jasper Flick, licensed as MIT-0
+Thank you!
+
+https://catlikecoding.com/unity/tutorials/hex-map/
+https://catlikecoding.com/unity/tutorials/license/

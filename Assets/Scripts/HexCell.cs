@@ -5,21 +5,13 @@ public class HexCell : MonoBehaviour
     public HexCoordinates coordinates;
     public HexGridChunk chunk = null;
 
-    public Color Color 
-    { 
-        get
-        {
-            return color;
-        }
-        set
-        {
-            if (color == value)
-            {
-                return;
-            }
-            color = value;
-            Refresh();
-        }
+    [SerializeField]
+    private HexCell[] neighbors;
+    private int terrainTypeIndex;
+
+    private void Awake()
+    {
+        terrainTypeIndex = Random.Range(0, 4);
     }
 
     public bool HasRoads
@@ -30,15 +22,19 @@ public class HexCell : MonoBehaviour
         }
     }
 
-    [SerializeField]
-    private HexCell[] neighbors;
-    private Color color;
-
     public Vector3 Position
     {
         get
         {
             return transform.localPosition;
+        }
+    }
+
+    public int TerrainTypeIndex
+    {
+        get
+        {
+            return terrainTypeIndex;
         }
     }
 

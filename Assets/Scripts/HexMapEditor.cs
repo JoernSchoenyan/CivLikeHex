@@ -40,6 +40,6 @@ public class HexMapEditor : MonoBehaviour
 
     private void EditCell(HexCell cell)
     {
-		cell.Color = activeColor;
+		//cell.Color = activeColor;
     }
 }

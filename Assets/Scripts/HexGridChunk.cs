@@ -6,8 +6,11 @@ public class HexGridChunk : MonoBehaviour
     public HexMesh terrain;
 
     private HexCell[] cells;
+	private static Color color1 = new Color(1f, 0f, 0f);
+	private static Color color2 = new Color(0f, 1f, 0f);
+	private static Color color3 = new Color(0f, 0f, 1f);
 
-    private void Awake()
+	private void Awake()
     {
         cells = new HexCell[HexMetrics.chunkSizeX * HexMetrics.chunkSizeZ];
     }
@@ -43,7 +46,7 @@ public class HexGridChunk : MonoBehaviour
 		Vector3 center = cell.Position;
 		EdgeVertices e = new EdgeVertices(center + HexMetrics.GetFirstSolidCorner(direction), center + HexMetrics.GetSecondSolidCorner(direction));
 
-		TriangulateEdgeFan(center, e, cell.Color);
+		TriangulateEdgeFan(center, e, cell.TerrainTypeIndex);
 
 		if (direction <= HexDirection.SE)
 		{
@@ -67,7 +70,7 @@ public class HexGridChunk : MonoBehaviour
 		Vector3 bridge = HexMetrics.GetBridge(direction);
 		EdgeVertices e2 = new EdgeVertices(e1.v1 + bridge, e1.v5 + bridge);
 
-		TriangulateEdgeStrip(e1, cell.Color, e2, neighbor.Color);
+		TriangulateEdgeStrip(e1, color1, cell.TerrainTypeIndex, e2, color2, neighbor.TerrainTypeIndex);
 
 		HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
 		if (direction <= HexDirection.E && nextNeighbor != null)
@@ -77,35 +80,55 @@ public class HexGridChunk : MonoBehaviour
 		}
 	}
 
-	private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, Color color)
+	private void TriangulateEdgeFan(Vector3 center, EdgeVertices edge, float type)
 	{
+		Vector3 types;
+		types.x = types.y = types.z = type;
+		
 		terrain.AddTriangle(center, edge.v1, edge.v2);
-		terrain.AddTriangleColor(color);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
 		terrain.AddTriangle(center, edge.v2, edge.v3);
-		terrain.AddTriangleColor(color);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
 		terrain.AddTriangle(center, edge.v3, edge.v4);
-		terrain.AddTriangleColor(color);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
 		terrain.AddTriangle(center, edge.v4, edge.v5);
-		terrain.AddTriangleColor(color);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
 	}
 
-	private void TriangulateEdgeStrip(EdgeVertices e1, Color c1, EdgeVertices e2, Color c2)
+	private void TriangulateEdgeStrip(EdgeVertices e1, Color c1, float type1, EdgeVertices e2, Color c2, float type2)
 	{
+		Vector3 types;
+		types.x = types.z = type1;
+		types.y = type2;
 
 		terrain.AddQuad(e1.v1, e1.v2, e2.v1, e2.v2);
 		terrain.AddQuadColor(c1, c2);
+		terrain.AddQuadTerrainTypes(types);
 		terrain.AddQuad(e1.v2, e1.v3, e2.v2, e2.v3);
 		terrain.AddQuadColor(c1, c2);
+		terrain.AddQuadTerrainTypes(types);
 		terrain.AddQuad(e1.v3, e1.v4, e2.v3, e2.v4);
 		terrain.AddQuadColor(c1, c2);
+		terrain.AddQuadTerrainTypes(types);
 		terrain.AddQuad(e1.v4, e1.v5, e2.v4, e2.v5);
 		terrain.AddQuadColor(c1, c2);
+		terrain.AddQuadTerrainTypes(types);
 	}
 
 	private void TriangulateCorner(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
 	{
+		Vector3 types;
+		types.x = bottomCell.TerrainTypeIndex;
+		types.y = leftCell.TerrainTypeIndex;
+		types.z = rightCell.TerrainTypeIndex;
+
 		terrain.AddTriangle(bottom, left, right);
-		terrain.AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
+		terrain.AddTriangleColor(color1, color2, color3);
+		terrain.AddTriangleTerrainTypes(types);
 	}
 
 	private void LateUpdate()

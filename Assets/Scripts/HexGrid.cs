@@ -7,7 +7,6 @@ public class HexGrid : MonoBehaviour
 
     public HexCell cellPrefab;
 
-	public Color defaultColor = Color.white;
 	public Texture2D noiseSource = null;
     public HexGridChunk chunkPrefab;
 
@@ -19,8 +18,7 @@ public class HexGrid : MonoBehaviour
 
 	private void Awake()
     {
-        HexMetrics.noiseSource = noiseSource;
-        HexMetrics.InitializeHashGrid(seed);
+        Initialize();
 
         cellCountX = chunkCountX * HexMetrics.chunkSizeX;
         cellCountZ = chunkCountZ * HexMetrics.chunkSizeZ;
@@ -30,6 +28,11 @@ public class HexGrid : MonoBehaviour
     }
 
     private void OnEnable()
+    {
+        Initialize();
+    }
+
+    private void Initialize()
     {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
@@ -80,7 +83,6 @@ public class HexGrid : MonoBehaviour
 		HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
 		cell.transform.localPosition = position;
 		cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
-		cell.Color = defaultColor;
 
 		if (x > 0)
         {
