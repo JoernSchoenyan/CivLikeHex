@@ -25,9 +25,24 @@ public class HexFeatureManager : MonoBehaviour
 
     }
 
-    public void AddFeature(Vector3 position)
+    public void AddFeature(Vector3 position, TerrainType terrainType)
     {
-        Addressables.LoadAssetAsync<GameObject>(hugeTreePrefab).Completed += (handle) => SpawnFeature(handle.Result, position);
+        AssetReference assetToLoad;
+
+        if (terrainType == TerrainType.Grassland)
+        {
+            assetToLoad = hugeTreePrefab;
+        }
+        else if (terrainType == TerrainType.Desert)
+        {
+            assetToLoad = cactusPrefab;
+        }
+        else
+        {
+            assetToLoad = pineTreeNoSnowPrefab;
+        }
+
+        Addressables.LoadAssetAsync<GameObject>(assetToLoad).Completed += (handle) => SpawnFeature(handle.Result, position);
     }
 
     private void SpawnFeature(GameObject feature, Vector3 position)

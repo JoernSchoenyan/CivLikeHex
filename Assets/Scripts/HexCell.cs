@@ -7,11 +7,11 @@ public class HexCell : MonoBehaviour
 
     [SerializeField]
     private HexCell[] neighbors;
-    private int terrainTypeIndex;
+    private TerrainType terrainType;
 
     private void Awake()
     {
-        terrainTypeIndex = Random.Range(0, 4);
+        terrainType = (TerrainType)Random.Range(1, 5);
     }
 
     public bool HasRoads
@@ -30,11 +30,11 @@ public class HexCell : MonoBehaviour
         }
     }
 
-    public int TerrainTypeIndex
+    public TerrainType TerrainType
     {
         get
         {
-            return terrainTypeIndex;
+            return terrainType;
         }
     }
 

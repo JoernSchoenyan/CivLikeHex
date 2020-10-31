@@ -37,7 +37,7 @@ public class HexGridChunk : MonoBehaviour
 		}
 		if (!cell.HasRoads)
         {
-			features.AddFeature(cell.Position);
+			features.AddFeature(cell.Position, cell.TerrainType);
 		}
 	}
 
@@ -46,7 +46,7 @@ public class HexGridChunk : MonoBehaviour
 		Vector3 center = cell.Position;
 		EdgeVertices e = new EdgeVertices(center + HexMetrics.GetFirstSolidCorner(direction), center + HexMetrics.GetSecondSolidCorner(direction));
 
-		TriangulateEdgeFan(center, e, cell.TerrainTypeIndex);
+		TriangulateEdgeFan(center, e, (float)cell.TerrainType);
 
 		if (direction <= HexDirection.SE)
 		{
@@ -55,7 +55,7 @@ public class HexGridChunk : MonoBehaviour
 
 		if (!cell.HasRoadThroughEdge(direction))
         {
-			features.AddFeature((center + e.v1 + e.v5) * (1f / 3f));
+			features.AddFeature((center + e.v1 + e.v5) * (1f / 3f), cell.TerrainType);
         }
 	}
 
@@ -70,7 +70,7 @@ public class HexGridChunk : MonoBehaviour
 		Vector3 bridge = HexMetrics.GetBridge(direction);
 		EdgeVertices e2 = new EdgeVertices(e1.v1 + bridge, e1.v5 + bridge);
 
-		TriangulateEdgeStrip(e1, color1, cell.TerrainTypeIndex, e2, color2, neighbor.TerrainTypeIndex);
+		TriangulateEdgeStrip(e1, color1, (float)cell.TerrainType, e2, color2, (float)neighbor.TerrainType);
 
 		HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
 		if (direction <= HexDirection.E && nextNeighbor != null)
@@ -122,9 +122,9 @@ public class HexGridChunk : MonoBehaviour
 	private void TriangulateCorner(Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell)
 	{
 		Vector3 types;
-		types.x = bottomCell.TerrainTypeIndex;
-		types.y = leftCell.TerrainTypeIndex;
-		types.z = rightCell.TerrainTypeIndex;
+		types.x = (float)bottomCell.TerrainType;
+		types.y = (float)leftCell.TerrainType;
+		types.z = (float)rightCell.TerrainType;
 
 		terrain.AddTriangle(bottom, left, right);
 		terrain.AddTriangleColor(color1, color2, color3);
