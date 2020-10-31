@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -192,7 +193,7 @@ public class HexMesh : MonoBehaviour
 		}
 		if (useUV2Coordinates)
 		{
-			hexMesh.SetUVs(0, uv2s);
+			hexMesh.SetUVs(1, uv2s);
 			ListPool<Vector2>.Add(uv2s);
 		}
 		if (useTerrainTypes)
@@ -207,5 +208,6 @@ public class HexMesh : MonoBehaviour
         {
 			meshCollider.sharedMesh = hexMesh;
 		}
+		Unwrapping.GenerateSecondaryUVSet(hexMesh);
 	}
 }
