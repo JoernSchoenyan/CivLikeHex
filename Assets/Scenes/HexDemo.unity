@@ -1803,6 +1803,7 @@ MonoBehaviour:
   chunkCountZ: 3
   seed: 314159265
   cellPrefab: {fileID: 3815425504572456418, guid: d59001577cdb2744a975020b40f2c173, type: 3}
+  cellLabelPrefab: {fileID: 2086742364031267309, guid: 493f05105742db440af543c1a930cb69, type: 3}
   noiseSource: {fileID: 2800000, guid: 3f267cf6d9b7094449168b484e7d1345, type: 3}
   chunkPrefab: {fileID: 4166627680403487284, guid: 016ea824be157ec41914ab2f9f5d323a, type: 3}
 --- !u!4 &1533381992

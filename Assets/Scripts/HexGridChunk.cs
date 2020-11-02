@@ -6,6 +6,7 @@ public class HexGridChunk : MonoBehaviour
     public HexMesh terrain;
 
     private HexCell[] cells;
+	private Canvas gridCanvas;
 	private static Color color1 = new Color(1f, 0f, 0f);
 	private static Color color2 = new Color(0f, 1f, 0f);
 	private static Color color3 = new Color(0f, 0f, 1f);
@@ -13,6 +14,27 @@ public class HexGridChunk : MonoBehaviour
 	private void Awake()
     {
         cells = new HexCell[HexMetrics.chunkSizeX * HexMetrics.chunkSizeZ];
+
+		gridCanvas = GetComponentInChildren<Canvas>();
+		//ShowUI(false);
+	}
+
+	public void AddCell(int index, HexCell cell)
+	{
+		cells[index] = cell;
+		cell.chunk = this;
+		cell.transform.SetParent(transform, false);
+		cell.uiRect.SetParent(gridCanvas.transform, false);
+	}
+
+	public void Refresh()
+	{
+		enabled = true;
+	}
+
+	public void ShowUI(bool visible)
+    {
+		gridCanvas.gameObject.SetActive(visible);
     }
 
 	public void Triangulate()
@@ -135,17 +157,5 @@ public class HexGridChunk : MonoBehaviour
     {
         Triangulate();
         enabled = false;
-    }
-
-    public void AddCell(int index, HexCell cell)
-    {
-        cells[index] = cell;
-        cell.chunk = this;
-        cell.transform.SetParent(transform, false);
-    }
-
-    public void Refresh()
-    {
-        enabled = true;
     }
 }

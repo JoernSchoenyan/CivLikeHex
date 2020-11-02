@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class HexGrid : MonoBehaviour
 {
@@ -6,6 +7,7 @@ public class HexGrid : MonoBehaviour
     public int seed = 314159265;
 
     public HexCell cellPrefab;
+    public Text cellLabelPrefab;
 
 	public Texture2D noiseSource = null;
     public HexGridChunk chunkPrefab;
@@ -30,6 +32,14 @@ public class HexGrid : MonoBehaviour
     private void OnEnable()
     {
         Initialize();
+    }
+
+    public void ShowUI(bool visible)
+    {
+        for (int i = 0; i < chunks.Length; i++)
+        {
+            chunks[i].ShowUI(visible);
+        }
     }
 
     private void Initialize()
@@ -107,8 +117,15 @@ public class HexGrid : MonoBehaviour
                 }
             }
         }
+
+        Text label = Instantiate<Text>(cellLabelPrefab);
+        label.rectTransform.anchoredPosition =
+            new Vector2(position.x, position.z);
+        label.text = cell.coordinates.ToStringOnSeparateLines();
+        cell.uiRect = label.rectTransform;
+
         AddCellToChunk(x, z, cell);
-	}
+    }
 
     private void AddCellToChunk(int x, int z, HexCell cell)
     {

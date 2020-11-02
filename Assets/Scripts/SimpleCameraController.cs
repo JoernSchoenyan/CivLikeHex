@@ -118,6 +118,11 @@ namespace UnityTemplateProjects
 
 #if ENABLE_LEGACY_INPUT_MANAGER
 
+            if (Input.GetKeyUp(KeyCode.U))
+            {
+                FindObjectOfType<HexGrid>().ShowUI(false);
+            }
+
             // Exit Sample  
             if (Input.GetKey(KeyCode.Escape))
             {

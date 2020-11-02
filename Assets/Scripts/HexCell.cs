@@ -4,6 +4,7 @@ public class HexCell : MonoBehaviour
 {
     public HexCoordinates coordinates;
     public HexGridChunk chunk = null;
+    public RectTransform uiRect = null;
 
     [SerializeField]
     private HexCell[] neighbors;
