@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -208,6 +207,5 @@ public class HexMesh : MonoBehaviour
         {
 			meshCollider.sharedMesh = hexMesh;
 		}
-		Unwrapping.GenerateSecondaryUVSet(hexMesh);
 	}
 }
