@@ -6,9 +6,14 @@ public static class HexMetrics
     public const float innerRadius = outerRadius * 0.866025404f;
 	public const float solidFactor = 0.75f;
 	public const float blendFactor = 1f - solidFactor;
+	public const float hillPlateauFactor = 0.25f;
 	public const float cellPerturbStrength = 2f;
 	public const int chunkSizeX = 5, chunkSizeZ = 5;
 	public const int hashGridSize = 256;
+	public const int hillSteps = 8;
+	public const float hillStepSize = 1f / hillSteps;
+	public const float hillHeight = 1.5f;
+	public static float[] hillStepsHeight = new float[hillSteps + 1];
 
 	public static Texture2D noiseSource = null;
 
@@ -27,7 +32,7 @@ public static class HexMetrics
 		new Vector3(0f, 0f, outerRadius)
 	};
 
-	public static Vector3 GetFirstSolidCorner(HexDirection direction)
+    public static Vector3 GetFirstSolidCorner(HexDirection direction)
     {
 		return corners[(int)direction] * solidFactor;
     }
@@ -37,7 +42,7 @@ public static class HexMetrics
 		return corners[(int)direction + 1] * solidFactor;
 	}
 
-	public static Vector3 GetFirstCorner(HexDirection direction)
+    public static Vector3 GetFirstCorner(HexDirection direction)
     {
 		return corners[(int)direction];
     }
@@ -64,6 +69,14 @@ public static class HexMetrics
 		position.z += (sample.z * 2f - 1f) * cellPerturbStrength;
 
 		return position;
+	}
+
+	public static void InitializeHillStepsHeight()
+	{
+		for (int i = 0; i < hillStepsHeight.Length; i++)
+        {
+			hillStepsHeight[i] = Mathf.Cos(i * hillStepSize * Mathf.PI / 2f) * hillHeight;
+        }
 	}
 
 	public static void InitializeHashGrid(int seed)

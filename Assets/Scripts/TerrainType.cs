@@ -5,5 +5,5 @@
     Plains,
     Tundra,
     Desert,
-    Ice
+    Mountain
 }

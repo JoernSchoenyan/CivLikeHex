@@ -10,10 +10,43 @@ public class HexCell : MonoBehaviour
     [SerializeField]
     private HexCell[] neighbors;
     private TerrainType terrainType;
+    private HexResources resources = HexResources.None;
+    private TerrainVegetation vegetation = TerrainVegetation.None;
+    public TerrainShape shape = TerrainShape.Flat;
+    private int distance;
+
+    public int Distance
+    {
+        get
+        {
+            return distance;
+        }
+        set
+        {
+            distance = value;
+            UpdateLabelText(distance.ToString());
+        }
+    }
 
     private void Awake()
     {
         terrainType = (TerrainType)Random.Range(1, 5);
+        int r = Random.Range(1, 11);
+        if (r == 1)
+        {
+            shape = TerrainShape.Mountain;
+            terrainType = TerrainType.Mountain;
+        }
+        else if (r > 1 & r <= 3)
+        {
+            shape = TerrainShape.Hill;
+        }
+    }
+
+    public void UpdateLabelText(string text)
+    {
+        Text label = uiRect.GetComponent<Text>();
+        label.text = text;
     }
 
     public void DisableHighlight()
@@ -56,6 +89,11 @@ public class HexCell : MonoBehaviour
     public HexCell GetNeighbor(HexDirection direction)
     {
         return neighbors[(int)direction];
+    }
+
+    public void FindDistancesTo(HexCell cell)
+    {
+
     }
 
     public void SetNeighbor(HexDirection direction, HexCell cell)

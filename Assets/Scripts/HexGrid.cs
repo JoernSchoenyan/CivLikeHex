@@ -42,10 +42,27 @@ public class HexGrid : MonoBehaviour
         }
     }
 
+    public HexCell GetCell(Vector3 position)
+    {
+        position = transform.InverseTransformPoint(position);
+        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+        int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
+        return cells[index];
+    }
+
+    public void FindDistancesTo(HexCell cell)
+    {
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].Distance = 0;
+        }
+    }
+
     private void Initialize()
     {
         HexMetrics.noiseSource = noiseSource;
         HexMetrics.InitializeHashGrid(seed);
+        HexMetrics.InitializeHillStepsHeight();
     }
 
     private void CreateChunks()
@@ -73,14 +90,6 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
-    }
-
-	public HexCell GetCell(Vector3 position)
-    {
-        position = transform.InverseTransformPoint(position);
-        HexCoordinates coordinates = HexCoordinates.FromPosition(position);
-        int index = coordinates.X + coordinates.Z * cellCountX + coordinates.Z / 2;
-		return cells[index];
     }
 
     private void CreateCell(int x, int z, int i)
@@ -121,7 +130,6 @@ public class HexGrid : MonoBehaviour
         Text label = Instantiate<Text>(cellLabelPrefab);
         label.rectTransform.anchoredPosition =
             new Vector2(position.x, position.z);
-        //label.text = cell.coordinates.ToStringOnSeparateLines();
         cell.uiRect = label.rectTransform;
 
         AddCellToChunk(x, z, cell);

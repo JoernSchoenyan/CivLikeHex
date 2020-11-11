@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class HexGridChunk : MonoBehaviour
 {
@@ -67,8 +68,18 @@ public class HexGridChunk : MonoBehaviour
 	{
 		Vector3 center = cell.Position;
 		EdgeVertices e = new EdgeVertices(center + HexMetrics.GetFirstSolidCorner(direction), center + HexMetrics.GetSecondSolidCorner(direction));
-
-		TriangulateEdgeFan(center, e, (float)cell.TerrainType);
+		if (cell.shape == TerrainShape.Flat)
+        {
+			TriangulateEdgeFan(center, e, (float)cell.TerrainType);
+		}
+		else if (cell.shape == TerrainShape.Hill)
+        {
+			TriangulateEdgeFanHill(center + (Vector3.up * HexMetrics.hillHeight), e, (float)cell.TerrainType);
+        }
+		else
+        {
+			TriangulateEdgeFanMountain(center, e, (float)cell.TerrainType);
+		}
 
 		if (direction <= HexDirection.SE)
 		{
@@ -81,7 +92,78 @@ public class HexGridChunk : MonoBehaviour
         }
 	}
 
-	private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1)
+    private void TriangulateEdgeFanMountain(Vector3 center, EdgeVertices edge, float type)
+    {
+		Vector3 types;
+		types.x = types.y = types.z = type;
+
+		center += Vector3.up * 7;
+
+		terrain.AddTriangle(center, edge.v1, edge.v2);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v2, edge.v3);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v3, edge.v4);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v4, edge.v5);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+	}
+
+	private void TriangulateEdgeFanHill(Vector3 center, EdgeVertices edge, float type)
+    {
+		Vector3 types;
+		types.x = types.y = types.z = type;
+
+		Vector3 v1 = Vector3.Lerp(center, edge.v1 + (Vector3.up * HexMetrics.hillHeight), HexMetrics.hillPlateauFactor);
+		Vector3 v2 = Vector3.Lerp(center, edge.v2 + (Vector3.up * HexMetrics.hillHeight), HexMetrics.hillPlateauFactor);
+		Vector3 v3 = Vector3.Lerp(center, edge.v3 + (Vector3.up * HexMetrics.hillHeight), HexMetrics.hillPlateauFactor);
+		Vector3 v4 = Vector3.Lerp(center, edge.v4 + (Vector3.up * HexMetrics.hillHeight), HexMetrics.hillPlateauFactor);
+		Vector3 v5 = Vector3.Lerp(center, edge.v5 + (Vector3.up * HexMetrics.hillHeight), HexMetrics.hillPlateauFactor);
+
+		terrain.AddTriangle(center, v1, v2);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, v2, v3);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, v3, v4);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, v4, v5);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+
+		TriangulateHillslope(v1, v2, edge.v1, edge.v2, types);
+		TriangulateHillslope(v2, v3, edge.v2, edge.v3, types);
+		TriangulateHillslope(v3, v4, edge.v3, edge.v4, types);
+		TriangulateHillslope(v4, v5, edge.v4, edge.v5, types);
+	}
+
+    private void TriangulateHillslope(Vector3 firstVector3Left, Vector3 firstVector3Right, Vector3 lastVector3Left, Vector3 lastVector3Right, Vector3 types)
+    {
+		for (int i = 0; i < HexMetrics.hillSteps; i++)
+        {
+			Vector3 v1 = Vector3.Lerp(firstVector3Left, lastVector3Left, i * HexMetrics.hillStepSize);
+			Vector3 v2 = Vector3.Lerp(firstVector3Right, lastVector3Right, i * HexMetrics.hillStepSize);
+
+			v1.y = v2.y = HexMetrics.hillStepsHeight[i];
+
+			Vector3 v3 = Vector3.Lerp(firstVector3Left, lastVector3Left, (i + 1) * HexMetrics.hillStepSize);
+			Vector3 v4 = Vector3.Lerp(firstVector3Right, lastVector3Right, (i + 1) * HexMetrics.hillStepSize);
+
+			v3.y = v4.y = HexMetrics.hillStepsHeight[i + 1];
+
+			terrain.AddQuad(v1, v2, v3, v4);
+			terrain.AddQuadColor(color1);
+			terrain.AddQuadTerrainTypes(types);
+		}
+	}
+
+    private void TriangulateConnection(HexDirection direction, HexCell cell, EdgeVertices e1)
 	{
 		HexCell neighbor = cell.GetNeighbor(direction);
 		if (neighbor == null)

@@ -3,17 +3,10 @@ using UnityEngine.EventSystems;
 
 public class HexMapEditor : MonoBehaviour
 {
-
-	public Color[] colors;
-
 	public HexGrid hexGrid;
 
-	private Color activeColor;
-
-	private void Awake()
-	{
-		SelectColor(3);
-	}
+	private HexCell currentCell, searchFromCell;
+	private bool editMode = false;
 
 	private void Update()
 	{
@@ -23,10 +16,11 @@ public class HexMapEditor : MonoBehaviour
 		}
 	}
 
-	public void SelectColor(int index)
-	{
-		activeColor = colors[index];
-	}
+	public void SetEditMode(bool toggle)
+    {
+		editMode = toggle;
+		hexGrid.ShowUI(!toggle);
+    }
 
 	private void HandleInput()
 	{
@@ -34,8 +28,21 @@ public class HexMapEditor : MonoBehaviour
 		RaycastHit hit;
 		if (Physics.Raycast(inputRay, out hit))
 		{
-			EditCell(hexGrid.GetCell(hit.point));
+			currentCell = hexGrid.GetCell(hit.point);
+
+
+
 		}
+
+		if (Input.GetKey(KeyCode.LeftShift))
+        {
+			if (searchFromCell)
+            {
+				searchFromCell.DisableHighlight();
+            }
+			searchFromCell = currentCell;
+			searchFromCell.EnableHighlight(Color.blue);
+        }
 	}
 
     private void EditCell(HexCell cell)
