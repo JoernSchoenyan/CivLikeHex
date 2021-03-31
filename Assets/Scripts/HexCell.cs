@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class HexCell : MonoBehaviour
@@ -24,7 +24,7 @@ public class HexCell : MonoBehaviour
         set
         {
             distance = value;
-            UpdateLabelText(distance.ToString());
+            UpdateDistanceLabel(distance.ToString());
         }
     }
 
@@ -43,10 +43,10 @@ public class HexCell : MonoBehaviour
         }
     }
 
-    public void UpdateLabelText(string text)
+    public void UpdateDistanceLabel(string text)
     {
         Text label = uiRect.GetComponent<Text>();
-        label.text = text;
+        label.text = distance == int.MaxValue ? "" : distance.ToString();
     }
 
     public void DisableHighlight()

@@ -10,6 +10,19 @@ namespace UnityTemplateProjects
 {
     public class SimpleCameraController : MonoBehaviour
     {
+        public HexGrid hexGrid;
+
+        private void HandleInput () 
+        {
+            Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(inputRay, out hit)) {
+                HexCell currentCell = hexGrid.GetCell(hit.point);
+                
+                hexGrid.FindDistancesTo(currentCell);
+            }
+        }
+
         class CameraState
         {
             public float yaw;
@@ -131,6 +144,12 @@ namespace UnityTemplateProjects
 				UnityEditor.EditorApplication.isPlaying = false; 
 				#endif
             }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                HandleInput();
+            }
+            
             // Hide and lock cursor when right mouse button pressed
             if (Input.GetMouseButtonDown(1))
             {
