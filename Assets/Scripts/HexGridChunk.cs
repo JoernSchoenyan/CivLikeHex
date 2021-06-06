@@ -1,10 +1,10 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HexGridChunk : MonoBehaviour
 {
     public HexFeatureManager features;
     public HexMesh terrain;
+	public HexMesh roads;
 
     private HexCell[] cells;
 	private Canvas gridCanvas;
@@ -42,6 +42,7 @@ public class HexGridChunk : MonoBehaviour
 	{
 		terrain.Clear();
 		features.Clear();
+		roads.Clear();
 
 		for (int i = 0; i < cells.Length; i++)
 		{
@@ -50,6 +51,7 @@ public class HexGridChunk : MonoBehaviour
 
 		terrain.Apply();
 		features.Apply();
+		roads.Apply();
 	}
 
 	private void Triangulate(HexCell cell)
@@ -90,7 +92,18 @@ public class HexGridChunk : MonoBehaviour
         {
 			features.AddFeature((center + e.v1 + e.v5) * (1f / 3f), cell.TerrainType);
         }
+		else
+		{
+			TriangulateRoad(center, e);
+		}
 	}
+
+    private void TriangulateRoad(Vector3 center, EdgeVertices edge)
+    {
+        roads.AddTriangle(center, edge.v2, edge.v5);
+		roads.AddTriangleColor(color1);
+		roads.AddTriangleTerrainTypes(new Vector3(0f,0f,0f));
+    }
 
     private void TriangulateEdgeFanMountain(Vector3 center, EdgeVertices edge, float type)
     {

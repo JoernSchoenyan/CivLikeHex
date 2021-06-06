@@ -12,14 +12,24 @@ namespace UnityTemplateProjects
     {
         public HexGrid hexGrid;
 
-        private void HandleInput () 
+        private void HandleInput(KeyCode keyCode) 
         {
             Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(inputRay, out hit)) {
                 HexCell currentCell = hexGrid.GetCell(hit.point);
                 
-                hexGrid.FindDistancesTo(currentCell);
+                switch(keyCode)
+                {
+                    case KeyCode.Mouse0:
+                        hexGrid.FindDistancesTo(currentCell);
+                        break;
+                    case KeyCode.Mouse1:
+                        currentCell.ToggleRoads();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -147,31 +157,11 @@ namespace UnityTemplateProjects
 
             if (Input.GetMouseButtonUp(0))
             {
-                HandleInput();
+                HandleInput(KeyCode.Mouse0);
             }
-            
-            // Hide and lock cursor when right mouse button pressed
-            if (Input.GetMouseButtonDown(1))
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
-
-            // Unlock and show cursor when right mouse button released
             if (Input.GetMouseButtonUp(1))
             {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
-
-            // Rotation
-            if (Input.GetMouseButton(1))
-            {
-                var mouseMovement = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y") * (invertY ? 1 : -1));
-                
-                var mouseSensitivityFactor = mouseSensitivityCurve.Evaluate(mouseMovement.magnitude);
-
-                m_TargetCameraState.yaw += mouseMovement.x * mouseSensitivityFactor;
-                m_TargetCameraState.pitch += mouseMovement.y * mouseSensitivityFactor;
+                HandleInput(KeyCode.Mouse1);
             }
             
             // Translation

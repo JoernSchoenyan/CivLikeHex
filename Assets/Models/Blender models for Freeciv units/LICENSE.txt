@@ -1,0 +1,4 @@
+*** Blender models for Freeciv units ***
+made by yd, licensed as CC0
+
+https://opengameart.org/content/blender-models-for-freeciv-units

@@ -92,11 +92,6 @@ public class HexGrid : MonoBehaviour
                 frontier.Enqueue(neighbor);
             }
         }
-        // for (int i = 0; i < cells.Length; i++)
-        // {
-        //     yield return delay;
-        //     cells[i].Distance = cell.coordinates.DistanceTo(cells[i].coordinates);
-        // }
     }
 
     private void Initialize()

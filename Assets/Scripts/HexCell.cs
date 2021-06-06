@@ -9,6 +9,7 @@ public class HexCell : MonoBehaviour
 
     [SerializeField]
     private HexCell[] neighbors;
+    private bool hasRoads = false;
     private TerrainType terrainType;
     private HexResources resources = HexResources.None;
     private TerrainVegetation vegetation = TerrainVegetation.None;
@@ -62,11 +63,17 @@ public class HexCell : MonoBehaviour
         highlight.enabled = true;
     }
 
+    public void ToggleRoads()
+    {
+        hasRoads = !hasRoads;
+        chunk.Refresh();
+    }
+
     public bool HasRoads
     {
         get
         {
-            return false;
+            return hasRoads;
         }
     }
 
@@ -104,7 +111,12 @@ public class HexCell : MonoBehaviour
 
     public bool HasRoadThroughEdge(HexDirection direction)
     {
-        return false;
+        if (GetNeighbor(direction) == null)
+        {
+            return false;
+        }
+        
+        return HasRoads & GetNeighbor(direction).HasRoads;
     }
 
     private void Refresh()
