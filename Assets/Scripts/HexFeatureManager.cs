@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
+using System.Collections;
 
 public class HexFeatureManager : MonoBehaviour
 {
@@ -42,7 +43,18 @@ public class HexFeatureManager : MonoBehaviour
             assetToLoad = pineTreeNoSnowPrefab;
         }
 
-        Addressables.LoadAssetAsync<GameObject>(assetToLoad).Completed += (handle) => SpawnFeature(handle.Result, position);
+        StartCoroutine(DeferFeatureSpawn(position, assetToLoad));
+    }
+
+    private IEnumerator DeferFeatureSpawn(Vector3 position, AssetReference assetToLoad)
+    {
+        yield return new WaitForEndOfFrame();
+
+        RaycastHit hit;
+        if (Physics.Raycast(position + Vector3.up * 100, Vector3.down, out hit))
+        {
+            Addressables.LoadAssetAsync<GameObject>(assetToLoad).Completed += (handle) => SpawnFeature(handle.Result, hit.point);
+        }
     }
 
     private void SpawnFeature(GameObject feature, Vector3 position)
