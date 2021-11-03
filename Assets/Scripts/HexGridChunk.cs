@@ -60,7 +60,7 @@ public class HexGridChunk : MonoBehaviour
 		{
 			Triangulate(d, cell);
 		}
-		if (!cell.HasRoads)
+		if (!cell.HasRoads && cell.TerrainType != TerrainType.Mountain)
         {
 			features.AddFeature(cell.Position, cell.TerrainType);
 		}
@@ -78,9 +78,13 @@ public class HexGridChunk : MonoBehaviour
         {
 			TriangulateEdgeFanHill(center + (Vector3.up * HexMetrics.hillHeight), e, (float)cell.TerrainType);
         }
-		else
+		else if (cell.shape == TerrainShape.Mountain)
         {
 			TriangulateEdgeFanMountain(center, e, (float)cell.TerrainType);
+		}
+		else
+		{
+			TriangulateEdgeFanWaterGround(center, e);
 		}
 
 		if (direction <= HexDirection.SE)
@@ -97,6 +101,32 @@ public class HexGridChunk : MonoBehaviour
 			TriangulateRoad(center, e);
 		}
 	}
+
+    private void TriangulateEdgeFanWaterGround(Vector3 center, EdgeVertices edge)
+    {
+        Vector3 types;
+		types.x = types.y = types.z = 0;
+		
+		center += HexMetrics.waterGroundOffset;
+		edge.v1 += HexMetrics.waterGroundOffset;
+		edge.v2 += HexMetrics.waterGroundOffset;
+		edge.v3 += HexMetrics.waterGroundOffset;
+		edge.v4 += HexMetrics.waterGroundOffset;
+		edge.v5 += HexMetrics.waterGroundOffset;
+
+		terrain.AddTriangle(center, edge.v1, edge.v2);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v2, edge.v3);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v3, edge.v4);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+		terrain.AddTriangle(center, edge.v4, edge.v5);
+		terrain.AddTriangleColor(color1);
+		terrain.AddTriangleTerrainTypes(types);
+    }
 
     private void TriangulateRoad(Vector3 center, EdgeVertices edge)
     {

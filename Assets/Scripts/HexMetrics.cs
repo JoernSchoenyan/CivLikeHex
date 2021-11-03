@@ -14,6 +14,7 @@ public static class HexMetrics
 	public const float hillStepSize = 1f / hillSteps;
 	public const float hillHeight = 1.5f;
 	public static float[] hillStepsHeight = new float[hillSteps + 1];
+	public static Vector3 waterGroundOffset = new Vector3(0f, -5f, 0f);
 
 	public static Texture2D noiseSource = null;
 

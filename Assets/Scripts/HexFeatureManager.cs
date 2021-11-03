@@ -28,6 +28,8 @@ public class HexFeatureManager : MonoBehaviour
 
     public void AddFeature(Vector3 position, TerrainType terrainType)
     {
+        if (terrainType == TerrainType.OceanGround) return;
+
         AssetReference assetToLoad;
 
         if (terrainType == TerrainType.Grassland)
@@ -46,6 +48,10 @@ public class HexFeatureManager : MonoBehaviour
         StartCoroutine(DeferFeatureSpawn(position, assetToLoad));
     }
 
+    // Spawning the env features is deferred by one frame to make sure that the terrain is generated
+    // and the raycast has a valid result
+    // fortunately, Addressables has now synchronous loading: 
+    // https://docs.unity3d.com/Packages/com.unity.addressables@1.17/manual/SynchronousAddressables.html
     private IEnumerator DeferFeatureSpawn(Vector3 position, AssetReference assetToLoad)
     {
         yield return new WaitForEndOfFrame();
@@ -53,7 +59,10 @@ public class HexFeatureManager : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(position + Vector3.up * 100, Vector3.down, out hit))
         {
-            Addressables.LoadAssetAsync<GameObject>(assetToLoad).Completed += (handle) => SpawnFeature(handle.Result, hit.point);
+            var op = Addressables.LoadAssetAsync<GameObject>(assetToLoad);
+            GameObject go = op.WaitForCompletion();
+
+            SpawnFeature(go, hit.point);
         }
     }
 

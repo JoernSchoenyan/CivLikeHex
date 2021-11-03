@@ -31,8 +31,11 @@ public class HexCell : MonoBehaviour
 
     private void Awake()
     {
-        terrainType = (TerrainType)Random.Range(1, 5);
-        int r = Random.Range(1, 11);
+        terrainType = (TerrainType)Random.Range(0, 5);
+
+        if (terrainType > 0)
+        {
+                    int r = Random.Range(1, 11);
         if (r == 1)
         {
             shape = TerrainShape.Mountain;
@@ -41,6 +44,11 @@ public class HexCell : MonoBehaviour
         else if (r > 1 & r <= 3)
         {
             shape = TerrainShape.Hill;
+        }
+        }
+        else
+        {
+            shape = TerrainShape.Water;
         }
     }
 

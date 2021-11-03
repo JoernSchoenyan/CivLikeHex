@@ -2,5 +2,6 @@
 {
     Flat,
     Hill,
-    Mountain
+    Mountain,
+    Water
 }
